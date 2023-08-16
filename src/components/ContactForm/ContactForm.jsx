@@ -11,9 +11,6 @@ export const ContactForm = ({ handleSubmit }) => {
     const {name, value} = evt.target;
     if(name === "name") setName(value);
     if(name === "number") setNumber(value);
-    /* this.setState( () => ({
-      [name]: value,
-    })); */
   };
 
   const handleReset = e => {
@@ -64,6 +61,6 @@ export const ContactForm = ({ handleSubmit }) => {
     );
 }
 
-Filter.propTypes = {
+ContactForm.propTypes = {
   handleSubmit: PropTypes.func,
 };
