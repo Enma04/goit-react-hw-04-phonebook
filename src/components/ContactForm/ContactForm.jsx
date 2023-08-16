@@ -1,47 +1,35 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import css from '../App.module.css';
 
-const INITIAL_STATE = {
-  name: '',
-  number: '',
-};
 
+export const ContactForm = ({ handleSubmit }) => {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-export default class ContactForm extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      number: '',
-    }
-    this.handleReset = this.handleReset.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.OnSubmit = this.OnSubmit.bind(this);
-  }
-
-  handleChange = evt => {
+  const handleChange = evt => {
     const {name, value} = evt.target;
-    this.setState( () => ({
+    if(name === "name") setName(value);
+    if(name === "number") setNumber(value);
+    /* this.setState( () => ({
       [name]: value,
-    }));
+    })); */
   };
 
-  handleReset = e => {
-    this.setState({ ...INITIAL_STATE });
+  const handleReset = e => {
+    setName("");
+    setNumber("");
     e.target[0].value = '';
     e.target[1].value = '';
   };
 
-  OnSubmit(evt) {
+  function OnSubmit(evt) {
     evt.preventDefault();
-    this.props.handleSubmit( this.state );
-    this.handleReset(evt);
+    handleSubmit({ name, number });
+    handleReset(evt);
   }
 
-  render() {
     return (
-      <form className={css.contactsForm} onSubmit={this.OnSubmit} >
+      <form className={css.contactsForm} onSubmit={OnSubmit} >
         <h3 className={css.contactsH3} >Phonebooks</h3>
         <label htmlFor="">
           <span>Name</span>
@@ -52,7 +40,7 @@ export default class ContactForm extends Component {
             className="inputName"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            onChange={this.handleChange}
+            onChange={handleChange}
             required
           />
         </label>
@@ -64,7 +52,7 @@ export default class ContactForm extends Component {
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            onChange={this.handleChange}
+            onChange={handleChange}
             required
           />
         </label>
@@ -73,5 +61,4 @@ export default class ContactForm extends Component {
         </button>
       </form>
     );
-  }
 }
