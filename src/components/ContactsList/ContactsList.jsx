@@ -18,4 +18,5 @@ export const ContactsList = ({ contacts, handleDelete }) => {
 
 ContactsList.propTypes = {
   handleDelete: PropTypes.func,
+  contacts: PropTypes.array,
 };
