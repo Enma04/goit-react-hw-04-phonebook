@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import css from '../App.module.css';
+import PropTypes from 'prop-types';
 
 
 export const ContactForm = ({ handleSubmit }) => {
@@ -62,3 +63,7 @@ export const ContactForm = ({ handleSubmit }) => {
       </form>
     );
 }
+
+Filter.propTypes = {
+  handleSubmit: PropTypes.func,
+};
