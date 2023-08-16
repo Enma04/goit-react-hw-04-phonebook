@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import Swal from 'sweetalert2';
-import ContactsList from './ContactsList/ContactsList';
+import { ContactsList } from './ContactsList/ContactsList';
 
 
 export class App extends Component {
