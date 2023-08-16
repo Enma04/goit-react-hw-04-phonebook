@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import css from './App.module.css';
 import { nanoid } from 'nanoid';
 import {ContactForm} from './ContactForm/ContactForm';
@@ -6,56 +6,19 @@ import { Filter } from './Filter/Filter';
 import Swal from 'sweetalert2';
 import { ContactsList } from './ContactsList/ContactsList';
 
-
-export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      contacts: [],
-      filter: "",
-    };
-
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFilter = this.handleFilter.bind(this);
-    this.setContacts = this.setContacts.bind(this);
-  }
-
-
-  //------------------------------------------------------------------------
-  //------------------- METODOS DE LA CLASE COMPONENT
-  componentDidMount() {
-    if(JSON.parse( localStorage.getItem("contacts")) !== null) {
-      const localeContacts = JSON.parse( localStorage.getItem("contacts") );
-      this.setState(() => ({
-        contacts: [...localeContacts],
-      }));
-    }
-  }
-
-  componentDidUpdate( prevProps, prevState ) {
-    const { contacts, filter } = this.state;
-    if(prevState.contacts !== contacts) {
-      localStorage.setItem("contacts", JSON.stringify( contacts ));
-    }
-    if( (prevState.filter !== filter) && (filter !== "") ) this.setContacts();
-  }
-
+export const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState("");
 
   //------------------------------------------------------------------------
   //------------------- METODOS
-  handleDelete(e) {
+  const handleDelete = (e) => {
     const name = e.target.parentNode.firstChild.data;
-    this.setState( (prevState) => (
-      {
-        contacts: [...prevState.contacts.filter( item => item.name !== name )],
-      }
-    ));
+    setContacts([ ...contacts.filter( item => item.name !== name )])
     Swal.fire(`${name} eliminado!`);
   }
 
-  handleSubmit = ({ number, name }) => {
-    const { contacts } = this.state;
+  const handleSubmit = ({ number, name }) => {
 
     if (contacts.map(item => item.name).includes(name)) {
       Swal.fire('El contacto ya existe!');
@@ -67,16 +30,15 @@ export class App extends Component {
     }
 
     const id = "id-" + contacts.length + "-" + nanoid(2);
-    this.setState( prevState => ({
-      contacts: [...prevState.contacts, {id, name, number}],
-    }));
-    
+    setContacts( [...contacts, {id, name, number}] );
   };
 
-  handleFilter(filter) { this.setState({ filter }); }
+  const handleFilter = (filter) => { 
+    setFilter( filter );
+    if( filter !== "" ) handleContacts();
+  }
 
-  setContacts(){
-    const { contacts, filter } = this.state;
+  const handleContacts = () => {
     const aux = contacts.filter(item =>
       item.name.toLowerCase().includes(filter.toLowerCase())
     );
@@ -85,20 +47,32 @@ export class App extends Component {
   }
 
   //------------------------------------------------------------------------
-  //------------------- METODO RENDER
-  render() {
-    const contacts = this.setContacts();
-    return (
-      <div className={css.container}>
-        <ContactForm
-          handleSubmit={this.handleSubmit}
-        />
-        <Filter handleFilter={this.handleFilter} />
-        <ContactsList
-          contacts={contacts}
-          handleDelete={this.handleDelete}
-        />
-      </div>
-    );
-  }
+  //------------------- USE EFFECT
+  useEffect(() => {
+    if(JSON.parse( localStorage.getItem("contacts")) !== null) {
+      const localeContacts = JSON.parse( localStorage.getItem("contacts") );
+      setContacts([...localeContacts]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if( contacts.length > 0 ) {
+      localStorage.setItem("contacts", JSON.stringify( contacts ));
+    }
+  }, [contacts]);
+
+  //------------------------------------------------------------------------
+  //------------------- RETURN
+  return (
+    <div className={css.container}>
+      <ContactForm
+        handleSubmit={handleSubmit}
+      />
+      <Filter handleFilter={handleFilter} />
+      <ContactsList
+        contacts={handleContacts()}
+        handleDelete={handleDelete}
+      />
+    </div>
+  );
 }
