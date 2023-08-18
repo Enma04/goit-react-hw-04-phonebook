@@ -12,9 +12,8 @@ export const App = () => {
 
   //------------------------------------------------------------------------
   //------------------- METODOS
-  const handleDelete = (e) => {
-    const name = e.target.parentNode.firstChild.data;
-    setContacts([ ...contacts.filter( item => item.name !== name )])
+  const handleDelete = (id, name) => {
+    setContacts([ ...contacts.filter( item => item.id !== id )]);
     Swal.fire(`${name} eliminado!`);
   }
 
