@@ -16,8 +16,6 @@ export const ContactForm = ({ handleSubmit }) => {
   const handleReset = e => {
     setName("");
     setNumber("");
-    e.target[0].value = '';
-    e.target[1].value = '';
   };
 
   function OnSubmit(evt) {
@@ -40,6 +38,7 @@ export const ContactForm = ({ handleSubmit }) => {
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             onChange={handleChange}
             required
+            value={name}
           />
         </label>
         <label htmlFor="">
@@ -52,6 +51,7 @@ export const ContactForm = ({ handleSubmit }) => {
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             onChange={handleChange}
             required
+            value={number}
           />
         </label>
         <button className={css.contactsBtnSubmit} type='submit' >

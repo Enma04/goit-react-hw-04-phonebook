@@ -38,11 +38,10 @@ export const App = () => {
   }
 
   const handleContacts = () => {
-    const aux = contacts.filter(item =>
+    if(filter === '') return contacts;
+    return contacts.filter(item =>
       item.name.toLowerCase().includes(filter.toLowerCase())
     );
-    if(aux !== "") return aux
-    else return contacts
   }
 
   //------------------------------------------------------------------------
